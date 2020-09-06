@@ -1,38 +1,35 @@
-.App {
-  text-align: center;
+@keyframes dash {
+	to {
+		stroke-dashoffset: 0;
+	}
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.line,
+.lineHover {
+	stroke: black;
+	stroke-width: 10;
+	cursor: pointer;
+	stroke-dasharray: 90;
+	stroke-dashoffset: -5;
+	stroke-linecap: round;
+
+	transition: all linear 1s;
+	border-radius: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.lineHover {
+	stroke-dasharray: 90;
+	stroke-dashoffset: 95;
+	stroke: red;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.lineGroup:hover .lineHover {
+	position: relative;
+	stroke: red;
+	z-index: 100;
+	stroke-dashoffset: -5;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.number {
+	pointer-events: none;
 }
