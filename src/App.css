@@ -13,13 +13,13 @@
 	stroke-dashoffset: -5;
 	stroke-linecap: round;
 
-	transition: all linear 1s;
+	transition: all linear .5s;
 	border-radius: 100%;
 }
 
 .lineHover {
-	stroke-dasharray: 90;
-	stroke-dashoffset: 95;
+	stroke-dasharray: 100;
+	stroke-dashoffset: 100;
 	stroke: red;
 }
 
@@ -27,7 +27,7 @@
 	position: relative;
 	stroke: red;
 	z-index: 100;
-	stroke-dashoffset: -5;
+	stroke-dashoffset: 0;
 }
 
 .number {

@@ -1,73 +1,115 @@
 import React from 'react';
-import {Component} from 'react';
+import {LineGroup} from './Components/Svg';
+import config from './Config/Config';
+
 import './App.css';
 
 /**
  * Box game
  */
 
-class App extends Component {
-	size = 100;
-	width = 5; // define amount of horizontal squares
-	height = 5; // define amount of vertical squares
+class App extends React.Component {
 
 	constructor()
 	{
 		super();
 
 		this.state = {
-			tales: this.generateTales(),
-//			lines: this.generateLines()
+			playerData: {},
+			gameData: {
+				tales: this.generateTaleData(),
+				lines: this.generateLines(),
+				dots: this.generateLines(),
+			}
 		};
 	}
 
-	generateTales = () => {
-		let tales = [];
+	/**
+	 * Generate Tale Data
+	 * @returns {Array}
+	 */
+	generateTaleData = () => {
+		let taleData = [];
 
-		for (let y = 0; y < this.height; y++) {
-			tales[y] = [];
+		for (let y = 0; y < config.height; y++) {
+			taleData[y] = [];
 
-			for (let x = 0; x < this.width; x++) {
-				tales[y][x] = {
+			for (let x = 0; x < config.width; x++) {
+				taleData[y][x] = {
 					player: false,
-					number: (this.width * y) + x, // todo something with this
+					number: (config.width * y) + x,
 					color: '#ccc'
 				};
 			}
 		}
 
-		return tales;
+		return taleData;
 	};
 
-//	generateLines = () => {
-//		/**
-//		 * Draw the lines
-//		 */
-//		let lines = true;
-//
-//		// Loop through columns
-//		for (let column = 0; column <= this.width; column++) {
-//			// Loop through rows
-//			for (let row = 0; row <= this.height; row++) {
-//				// Vertical lines
-//				if (row !== this.width) {
-//					console.log(`${column - 1}:${column}`);
-//				}
-//
-//				// Horizontal lines
-//				if (column !== this.height) {
-//					console.log(`${row - 1}:${row}`);
-//				}
-//			}
-//		}
-//
-//		return lines;
-//	};
+	/**
+	 * Generate Line Data
+	 */
+	generateLineDate = () => {
+
+	};
+
+	generateLines = () => {
+		/**
+		 * Draw the lines
+		 */
+		const lines = [];
+		// Loop through columns
+		for (let column = 0; column <= config.width; column++) {
+			// Loop through rows
+			for (let row = 0; row <= config.height; row++) {
+				let line = this.getLinePositions(row, column, config.size, this.strokeWidth);
+
+				// Vertical lines
+				if (row !== config.width) {
+					lines.push(
+						<LineGroup x1={line.tl.x} y1={line.tl.y} x2={line.tr.x} y2={line.tr.y}/>
+					);
+				}
+
+				// Horizontal lines
+				if (column !== config.height) {
+					lines.push(
+						<LineGroup x1={line.tl.x} y1={line.tl.y} x2={line.bl.x} y2={line.bl.y}/>
+					);
+				}
+			}
+		}
+
+		return lines;
+	};
+
+
+	generateDots = () => {
+		/**
+		 * Draw the lines
+		 */
+		const dots = [];
+		// Loop through columns
+		for (let column = 0; column <= config.width; column++) {
+			// Loop through rows
+			for (let row = 0; row <= config.height; row++) {
+				let dot ={
+					x: row * config.size,
+					y: column* config.size,
+				}
+
+				// Vertical lines
+				dots.push(
+					<circle cx={dot.x} cy={dot.y} r="10" stroke="black" strokeWidth="3" fill="yellow"/>
+				);
+			}
+		}
+
+		return dots;
+	};
 
 	setColor = (y, x) => {
-		console.log(`click => ${y}:${x}`);
-		console.log(this.state.tales[y][x]);
-		let tales = this.state.tales;
+		let tales = this.state.gameData.tales;
 		tales[y][x].color = 'blue';
 
 		this.setState({tales: tales});
@@ -100,66 +142,31 @@ class App extends Component {
 
 	render()
 	{
-		const lines = [];
-
-		/**
-		 * Draw the lines
-		 */
-		// Loop through columns
-		for (let column = 0; column <= this.width; column++) {
-			// Loop through rows
-			for (let row = 0; row <= this.height; row++) {
-				let line = this.getLinePositions(row, column, this.size, this.strokeWidth);
-
-				// Vertical lines
-				if (row !== this.width) {
-					lines.push(
-						<g className="lineGroup">
-							<line className="line" x1={line.tl.x} y1={line.tl.y} x2={line.tr.x}
-							      y2={line.tr.y}/>
-							<line className="lineHover" x1={line.tl.x} y1={line.tl.y} x2={line.tr.x}
-							      y2={line.tr.y}/>
-						</g>
-					);
-				}
-
-				// Horizontal lines
-				if (column !== this.height) {
-					lines.push(
-						<g className="lineGroup">
-							<line className="line" x1={line.tl.x} y1={line.tl.y} x2={line.bl.x}
-							      y2={line.bl.y}/>
-							<line className="lineHover" x1={line.tl.x} y1={line.tl.y} x2={line.bl.x}
-							      y2={line.bl.y}/>
-						</g>
-					);
-				}
-			}
-		}
-
+		let lines = this.generateLines();
+		let dots = this.generateDots();
 		/**
 		 * Draw rectangles
 		 */
-
 			// Loop through rows
-		let squares = this.state.tales.map((i, row) => {
+		let squares = this.state.gameData.tales.map((i, row) => {
 				return i.map((box, column) => {
 					// Loop through columns
-					let x = column * this.size;
-					let y = row * this.size;
+					let x = column * config.size;
+					let y = row * config.size;
 
 					return (
-						<g>
+						<g key={box.number}>
 							<rect onClick={() => this.setColor(row, column)} x={x}
-							      y={y} width={this.size} height={this.size}
+							      y={y} width={config.size} height={config.size}
 							      fill={box.color}/>
-							<text className="number" x={x + this.size / 2}
-							      y={y + this.size / 2} dominantBaseline="middle" textAnchor="middle"
+							<text className="number" x={x + config.size / 2}
+							      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
 							      fill="black">{box.number}</text>
 						</g>
 					)
 				})
 			});
+
 
 		return (
 			<div className="App">
@@ -169,11 +176,11 @@ class App extends Component {
 					<li>Bonus perks idea: at a randomizer not knowing which color the line get</li>
 					<li>Bonus game: Guess the picture</li>
 				</ul>
-				<svg width="1000" height="1000">
+				<svg width="100%" height="1000" viewBox="0 0 1000 1000">
 					<g transform="translate(20,20)">
 						{squares}
-
 						{lines}
+						{dots}
 					</g>
 				</svg>
 			</div>
