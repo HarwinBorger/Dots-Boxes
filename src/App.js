@@ -44,12 +44,15 @@ class App extends React.Component {
 		let taleData = [];
 
 		for (let y = 0; y < config.height; y++) {
-			taleData[y] = [];
-
 			for (let x = 0; x < config.width; x++) {
-				taleData[y][x] = {
+				const number = (config.width * y) + x;
+				taleData[number] = {
+					pos: {
+						x: x,
+						y: y
+					},
 					player: false,
-					number: (config.width * y) + x,
+					number: number,
 					color: '#ccc'
 				};
 			}
@@ -60,8 +63,6 @@ class App extends React.Component {
 
 	/**
 	 * Generate Line Data
-	 *
-	 * Todo centralize data format in lineData array
 	 */
 	generateLineData = () => {
 		let lineData = [];
@@ -70,9 +71,10 @@ class App extends React.Component {
 		for (let x = 0; x <= config.width; x++) {
 			for (let y = 0; y <= config.height; y++) {
 
-				const pos = getLinePositions(x,y, config.size);
+				const pos = getLinePositions(x, y, config.size);
 				const numberCurrent = (config.width * y) + x;
 
+				// Todo horizontal and vertical use exact same script, should be put into function to centralize functionality
 				// Horizontal line
 				if (x < config.width) {
 					const numberAbove = y > 0 ? numberCurrent - config.height : false; // if not most top line
@@ -140,13 +142,6 @@ class App extends React.Component {
 		return dots;
 	};
 
-	setColor = (y, x) => {
-		let tales = this.state.box.tales;
-		tales[y][x].color = 'blue';
-
-		this.setState({tales: tales});
-	};
-
 	/**
 	 * Try to set Line
 	 * @param id
@@ -156,7 +151,7 @@ class App extends React.Component {
 
 		// Retrieve several states
 		const game = {...this.state.game};
-		const lines = {...this.state.box.lines};
+		let lines = {...this.state.box.lines};
 
 		// Check if player is allowed to set this line
 		if (lines[id].player !== false) {
@@ -169,18 +164,35 @@ class App extends React.Component {
 		this.setState({lines});
 
 		// Check if any of the numbers from line has 4 lines connected
+		let success = false; // flag set on true when 1 or more boxes are filled
 		lines[id].numbers.map((number) => {
 			if (number === false) {
 				return;
 			}
-			console.log(number);
+
+			let match = _.filter(lines, function (line) {
+				return line.numbers.includes(number) && line.player !== false;
+			});
+
+			if (match.length === 4) {
+				this.setBox(number, game.currentPlayer);
+				success = true;
+			}
 		});
 
-		// todo at if function to check if player filled a box, if so return, so the player can make another turn
+		// If player didn't succeed, then switch to other player
+		if (success === false) {
+			// Switch between players
+			game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
+			this.setState({game});
+		}
+	};
 
-		// Switch between players
-		game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
-		this.setState({game});
+	// Function to set box
+	setBox = (id, player) => {
+		let tales = {...this.state.box.tales};
+		tales[id].player = player;
+		this.setState(tales);
 	};
 
 	/**
@@ -194,6 +206,22 @@ class App extends React.Component {
 
 		if (player === false) {
 			return 'black';
+		}
+
+		return this.state.players[player].color;
+	};
+
+	/**
+	 * Get Box Color
+	 * @param id
+	 * @returns {string|string}
+	 */
+	getBoxColor = (id) =>{
+		const tales = {...this.state.box.tales};
+		const player = tales[id].player;
+
+		if (player === false) {
+			return 'white';
 		}
 
 		return this.state.players[player].color;
@@ -214,23 +242,21 @@ class App extends React.Component {
 		 * Draw rectangles
 		 */
 			// Loop through rows
-		let squares = this.state.box.tales.map((i, row) => {
-				return i.map((box, column) => {
-					// Loop through columns
-					let x = column * config.size;
-					let y = row * config.size;
+		let squares = this.state.box.tales.map((tale) => {
+				// Loop through columns
+				let x = tale.pos.x * config.size;
+				let y = tale.pos.y * config.size;
 
-					return (
-						<g key={box.number}>
-							<rect className="box__tale" onClick={() => this.setColor(row, column)} x={x}
-							      y={y} width={config.size} height={config.size}
-							      fill={box.color}/>
-							<text className="box__number" x={x + config.size / 2}
-							      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
-							      fill="black">{box.number}</text>
-						</g>
-					)
-				})
+				return (
+					<g key={tale.number}>
+						<rect className="box__tale" x={x}
+						      y={y} width={config.size} height={config.size}
+						      fill={this.getBoxColor(tale.number)}/>
+						<text className="box__number" x={x + config.size / 2}
+						      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
+						      fill="black">{tale.number}</text>
+					</g>
+				)
 			});
 
 		let lines = this.state.box.lines.map((line) => {
