@@ -155,10 +155,10 @@ class App extends React.Component {
 
 					return (
 						<g key={box.number}>
-							<rect onClick={() => this.setColor(row, column)} x={x}
+							<rect className="box__tale" onClick={() => this.setColor(row, column)} x={x}
 							      y={y} width={config.size} height={config.size}
 							      fill={box.color}/>
-							<text className="number" x={x + config.size / 2}
+							<text className="box__number" x={x + config.size / 2}
 							      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
 							      fill="black">{box.number}</text>
 						</g>
@@ -176,7 +176,7 @@ class App extends React.Component {
 					<li>Bonus game: Guess the picture</li>
 				</ul>
 				<svg width="100%" height="1000" viewBox="0 0 1000 1000">
-					<g transform="translate(50,50)">
+					<g className="box" transform="translate(50,50)">
 						{squares}
 						{lines}
 						{dots}

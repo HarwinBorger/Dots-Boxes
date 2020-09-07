@@ -1,13 +1,49 @@
 .box {
-	&__dot {
+	$s: &;
 
+	&__dot {
+		transition: all linear .2s;
+		cursor: pointer;
+
+		&:hover {
+			fill: lime;
+		}
 	}
 
-	&__line {
+	&__line-group {
+		&:hover #{$s}__line-hover {
+			position: relative;
+			stroke: red;
+			z-index: 100;
+			stroke-dashoffset: 0;
+		}
+	}
 
+	&__line,
+	&__line-hover {
+		stroke: black;
+		stroke-width: 10;
+		cursor: pointer;
+		stroke-dasharray: 90;
+		stroke-dashoffset: -5;
+		stroke-linecap: round;
+
+		transition: all linear .5s;
+		border-radius: 100%;
+	}
+
+	&__line-hover {
+		stroke-dasharray: 100;
+		stroke-dashoffset: 100;
+		stroke: red;
 	}
 
 	&__tale {
 
 	}
+
+	&__number {
+		pointer-events: none;
+	}
 }
+
