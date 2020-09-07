@@ -21,20 +21,10 @@ export class Dot extends React.Component {
 		}
 	}
 
-	large()
-	{
-		this.setState({radius: this.size.hover});
-	}
-
-	default()
-	{
-		this.setState({radius: this.size.default});
-	}
-
 	render()
 	{
 		return (
-			<circle onMouseEnter={() => this.large()} onMouseLeave={() => this.default()} className="box__dot" cx={this.props.cx} cy={this.props.cy} r={this.state.radius} stroke="black"
+			<circle onMouseEnter={() => this.setState({radius: this.size.hover})} onMouseLeave={() => this.setState({radius: this.size.default})} className="box__dot" cx={this.props.cx} cy={this.props.cy} r={this.state.radius} stroke="black"
 			        strokeWidth="3" fill="yellow"/>)
 	}
 }
@@ -42,7 +32,7 @@ export class Dot extends React.Component {
 
 export const LineGroup = (props) => {
 	return (
-		<g className="box__line-group">
+		<g className="box__line-group" onClick={props.onClick}>
 			<line className="box__line" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}/>
 			<line className="box__line-hover" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}/>
 		</g>

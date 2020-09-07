@@ -16,10 +16,9 @@ class App extends React.Component {
 
 		this.state = {
 			playerData: {},
-			gameData: {
+			box: {
 				tales: this.generateTaleData(),
-				lines: this.generateLines(),
-				dots: this.generateLines(),
+				lines: this.generateLineData(),
 			}
 		};
 	}
@@ -48,39 +47,58 @@ class App extends React.Component {
 
 	/**
 	 * Generate Line Data
+	 *
+	 * Todo centralize data format in lineData array
 	 */
-	generateLineDate = () => {
+	generateLineData = () => {
+		let lineData = [];
+		let id = 0;
 
-	};
+		for (let y = 0; y <= config.height; y++) {
+			for (let x = 0; x <= config.width; x++) {
 
-	generateLines = () => {
-		/**
-		 * Draw the lines
-		 */
-		const lines = [];
-		// Loop through columns
-		for (let column = 0; column <= config.width; column++) {
-			// Loop through rows
-			for (let row = 0; row <= config.height; row++) {
-				let line = this.getLinePositions(row, column, config.size, this.strokeWidth);
+				const pos = this.getLinePositions(y, x, config.size);
+				const numberCurrent = (config.width * y) + x;
 
-				// Vertical lines
-				if (row !== config.width) {
-					lines.push(
-						<LineGroup key={row+'-'+column+'v'} x1={line.tl.x} y1={line.tl.y} x2={line.tr.x} y2={line.tr.y}/>
-					);
+				// Horizontal line
+				const numberAbove = y > 0 ? numberCurrent - config.width : false; // if not most top line
+				const numberBelow = y < config.height ? numberCurrent : false; // if not most bottom line
+
+				if (y !== config.width) {
+					lineData.push({
+						id: id,
+						pos: {
+							x1: pos.tl.x,
+							y1: pos.tl.y,
+							x2: pos.tr.x,
+							y2: pos.tr.y
+						},
+						numbers: [numberAbove, numberBelow]
+					});
+					id++;
 				}
 
-				// Horizontal lines
-				if (column !== config.height) {
-					lines.push(
-						<LineGroup key={row+'-'+column+'h'} x1={line.tl.x} y1={line.tl.y} x2={line.bl.x} y2={line.bl.y}/>
-					);
+				// Vertical line
+				const numberLeft = x > 0 ? numberCurrent - 1 : false; // if not most left line
+				const numberRight = x < config.width ? numberCurrent : false; // if not most right line
+
+				if (x !== config.height) {
+					lineData.push({
+						id: id,
+						pos: {
+							x1: pos.tl.x,
+							y1: pos.tl.y,
+							x2: pos.bl.x,
+							y2: pos.bl.y
+						},
+						numbers: [numberLeft, numberRight]
+					});
+					id++;
 				}
 			}
 		}
 
-		return lines;
+		return lineData;
 	};
 
 	generateDots = () => {
@@ -92,14 +110,14 @@ class App extends React.Component {
 		for (let column = 0; column <= config.width; column++) {
 			// Loop through rows
 			for (let row = 0; row <= config.height; row++) {
-				let dot ={
+				let dot = {
 					x: row * config.size,
-					y: column* config.size,
-				}
+					y: column * config.size,
+				};
 
 				// Vertical lines
 				dots.push(
-					<Dot key={row+':'+column} cx={dot.x} cy={dot.y}/>
+					<Dot key={row + ':' + column} cx={dot.x} cy={dot.y}/>
 				);
 			}
 		}
@@ -108,46 +126,49 @@ class App extends React.Component {
 	};
 
 	setColor = (y, x) => {
-		let tales = this.state.gameData.tales;
+		let tales = this.state.box.tales;
 		tales[y][x].color = 'blue';
 
 		this.setState({tales: tales});
+	};
+
+	setLine = (id) => {
+		console.log(this.state.box.lines[id]);
 	};
 
 	getLinePositions = (column, row, size) => {
 		return {
 			// top left
 			tl: {
-				x: row * size,
-				y: column * size
+				x: column * size,
+				y: row * size
 			},
 			// top right
 			tr: {
-				x: row * size,
-				y: (column + 1) * size
+				x: (column + 1) * size,
+				y: row * size
 			},
 			// bottom left
 			bl: {
-				x: (row + 1) * size,
-				y: column * size
+				x: (column) * size,
+				y: (row + 1) * size
 			},
 			// bottom right (not needed atm)
 			br: {
-				x: (row + 1) * size,
-				y: (column + 1) * size
+				x: (column + 1) * size,
+				y: (row + 1) * size
 			}
 		};
 	};
 
 	render()
 	{
-		let lines = this.generateLines();
 		let dots = this.generateDots();
 		/**
 		 * Draw rectangles
 		 */
 			// Loop through rows
-		let squares = this.state.gameData.tales.map((i, row) => {
+		let squares = this.state.box.tales.map((i, row) => {
 				return i.map((box, column) => {
 					// Loop through columns
 					let x = column * config.size;
@@ -166,6 +187,12 @@ class App extends React.Component {
 				})
 			});
 
+		let lines = this.state.box.lines.map((line) => {
+			return (
+				<LineGroup onClick={() => this.setLine(line.id)} key={line.id} x1={line.pos.x1}
+				           y1={line.pos.y1} x2={line.pos.x2} y2={line.pos.y2}/>
+			);
+		});
 
 		return (
 			<div className="App">
@@ -175,6 +202,7 @@ class App extends React.Component {
 					<li>Bonus perks idea: at a randomizer not knowing which color the line get</li>
 					<li>Bonus game: Guess the picture</li>
 				</ul>
+
 				<svg width="100%" height="1000" viewBox="0 0 1000 1000">
 					<g className="box" transform="translate(50,50)">
 						{squares}
