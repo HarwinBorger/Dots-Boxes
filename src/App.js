@@ -1,6 +1,12 @@
 import React from 'react';
-import {LineGroup, Dot} from './Components/Svg';
+import _ from 'lodash';
+
+// Configs
 import config from './Config/Config';
+// Components
+import {LineGroup, Dot} from './Components/Svg';
+//  Utilities
+import {getLinePositions} from './Utils/Utils';
 
 import './App.css';
 
@@ -27,6 +33,7 @@ class App extends React.Component {
 				lines: this.generateLineData(),
 			}
 		};
+
 	}
 
 	/**
@@ -60,17 +67,17 @@ class App extends React.Component {
 		let lineData = [];
 		let id = 0;
 
-		for (let y = 0; y <= config.height; y++) {
-			for (let x = 0; x <= config.width; x++) {
+		for (let x = 0; x <= config.width; x++) {
+			for (let y = 0; y <= config.height; y++) {
 
-				const pos = this.getLinePositions(y, x, config.size);
+				const pos = getLinePositions(x,y, config.size);
 				const numberCurrent = (config.width * y) + x;
 
 				// Horizontal line
-				const numberAbove = y > 0 ? numberCurrent - config.width : false; // if not most top line
-				const numberBelow = y < config.height ? numberCurrent : false; // if not most bottom line
+				if (x < config.width) {
+					const numberAbove = y > 0 ? numberCurrent - config.height : false; // if not most top line
+					const numberBelow = y < config.height ? numberCurrent : false; // if not most bottom line
 
-				if (y !== config.width) {
 					lineData.push({
 						id: id,
 						pos: {
@@ -86,10 +93,10 @@ class App extends React.Component {
 				}
 
 				// Vertical line
-				const numberLeft = x > 0 ? numberCurrent - 1 : false; // if not most left line
-				const numberRight = x < config.width ? numberCurrent : false; // if not most right line
+				if (y < config.height) {
+					const numberLeft = x > 0 ? numberCurrent - 1 : false; // if not most left line
+					const numberRight = x < config.width ? numberCurrent : false; // if not most right line
 
-				if (x !== config.height) {
 					lineData.push({
 						id: id,
 						pos: {
@@ -141,29 +148,38 @@ class App extends React.Component {
 	};
 
 	/**
-	 * Set Line
+	 * Try to set Line
 	 * @param id
 	 */
 	setLine = (id) => {
 		console.log(this.state.box.lines[id]);
 
+		// Retrieve several states
 		const game = {...this.state.game};
 		const lines = {...this.state.box.lines};
+
+		// Check if player is allowed to set this line
 		if (lines[id].player !== false) {
 			alert('Leuk geprobeerd! ;-)');
 			return
 		}
 
+		// Connect a player to a line
 		lines[id].player = game.currentPlayer;
 		this.setState({lines});
-		console.log(this.state.box.lines[id]);
 
+		// Check if any of the numbers from line has 4 lines connected
+		lines[id].numbers.map((number) => {
+			if (number === false) {
+				return;
+			}
+			console.log(number);
+		});
 
-		// Go to other player
-		// todo at if function to check if player filled a box
+		// todo at if function to check if player filled a box, if so return, so the player can make another turn
 
+		// Switch between players
 		game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
-
 		this.setState({game});
 	};
 
@@ -189,38 +205,6 @@ class App extends React.Component {
 	 */
 	getCurrentPlayerColor = () => {
 		return this.state.players[this.state.game.currentPlayer].color;
-	};
-
-	/**
-	 * Get line position
-	 * @param column
-	 * @param row
-	 * @param size
-	 * @returns {{br: {x: number, y: number}, tl: {x: number, y: number}, bl: {x: number, y: number}, tr: {x: number, y: number}}}
-	 */
-	getLinePositions = (column, row, size) => {
-		return {
-			// top left
-			tl: {
-				x: column * size,
-				y: row * size
-			},
-			// top right
-			tr: {
-				x: (column + 1) * size,
-				y: row * size
-			},
-			// bottom left
-			bl: {
-				x: (column) * size,
-				y: (row + 1) * size
-			},
-			// bottom right (not needed atm)
-			br: {
-				x: (column + 1) * size,
-				y: (row + 1) * size
-			}
-		};
 	};
 
 	render()
