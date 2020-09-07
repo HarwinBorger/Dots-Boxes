@@ -67,14 +67,14 @@ class App extends React.Component {
 				// Vertical lines
 				if (row !== config.width) {
 					lines.push(
-						<LineGroup x1={line.tl.x} y1={line.tl.y} x2={line.tr.x} y2={line.tr.y}/>
+						<LineGroup key={row+'-'+column+'v'} x1={line.tl.x} y1={line.tl.y} x2={line.tr.x} y2={line.tr.y}/>
 					);
 				}
 
 				// Horizontal lines
 				if (column !== config.height) {
 					lines.push(
-						<LineGroup x1={line.tl.x} y1={line.tl.y} x2={line.bl.x} y2={line.bl.y}/>
+						<LineGroup key={row+'-'+column+'h'} x1={line.tl.x} y1={line.tl.y} x2={line.bl.x} y2={line.bl.y}/>
 					);
 				}
 			}
@@ -99,7 +99,7 @@ class App extends React.Component {
 
 				// Vertical lines
 				dots.push(
-					<Dot cx={dot.x} cy={dot.y}/>
+					<Dot key={row+':'+column} cx={dot.x} cy={dot.y}/>
 				);
 			}
 		}
