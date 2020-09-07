@@ -15,7 +15,13 @@ class App extends React.Component {
 		super();
 
 		this.state = {
-			playerData: {},
+			game: {
+				currentPlayer: 0
+			},
+			players: [
+				{name: 'Albert Einstein', color: 'red'},
+				{name: 'Leonardo da Vinci', color: 'blue'}
+			],
 			box: {
 				tales: this.generateTaleData(),
 				lines: this.generateLineData(),
@@ -73,7 +79,8 @@ class App extends React.Component {
 							x2: pos.tr.x,
 							y2: pos.tr.y
 						},
-						numbers: [numberAbove, numberBelow]
+						numbers: [numberAbove, numberBelow],
+						player: false
 					});
 					id++;
 				}
@@ -91,7 +98,8 @@ class App extends React.Component {
 							x2: pos.bl.x,
 							y2: pos.bl.y
 						},
-						numbers: [numberLeft, numberRight]
+						numbers: [numberLeft, numberRight],
+						player: false
 					});
 					id++;
 				}
@@ -132,10 +140,64 @@ class App extends React.Component {
 		this.setState({tales: tales});
 	};
 
+	/**
+	 * Set Line
+	 * @param id
+	 */
 	setLine = (id) => {
 		console.log(this.state.box.lines[id]);
+
+		const game = {...this.state.game};
+		const lines = {...this.state.box.lines};
+		if (lines[id].player !== false) {
+			alert('Leuk geprobeerd! ;-)');
+			return
+		}
+
+		lines[id].player = game.currentPlayer;
+		this.setState({lines});
+		console.log(this.state.box.lines[id]);
+
+
+		// Go to other player
+		// todo at if function to check if player filled a box
+
+		game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
+
+		this.setState({game});
 	};
 
+	/**
+	 * Get Line Color
+	 * @param id
+	 * @returns {string|string}
+	 */
+	getLineColor = (id) => {
+		const lines = {...this.state.box.lines};
+		const player = lines[id].player;
+
+		if (player === false) {
+			return 'black';
+		}
+
+		return this.state.players[player].color;
+	};
+
+	/**
+	 * Get Current Player Color
+	 * @returns {string}
+	 */
+	getCurrentPlayerColor = () => {
+		return this.state.players[this.state.game.currentPlayer].color;
+	};
+
+	/**
+	 * Get line position
+	 * @param column
+	 * @param row
+	 * @param size
+	 * @returns {{br: {x: number, y: number}, tl: {x: number, y: number}, bl: {x: number, y: number}, tr: {x: number, y: number}}}
+	 */
 	getLinePositions = (column, row, size) => {
 		return {
 			// top left
@@ -189,8 +251,15 @@ class App extends React.Component {
 
 		let lines = this.state.box.lines.map((line) => {
 			return (
-				<LineGroup onClick={() => this.setLine(line.id)} key={line.id} x1={line.pos.x1}
-				           y1={line.pos.y1} x2={line.pos.x2} y2={line.pos.y2}/>
+				<LineGroup onClick={() => this.setLine(line.id)}
+				           key={line.id}
+				           x1={line.pos.x1}
+				           y1={line.pos.y1}
+				           x2={line.pos.x2}
+				           y2={line.pos.y2}
+				           color={this.getLineColor(line.id)}
+				           currentColor={this.getCurrentPlayerColor()}
+				/>
 			);
 		});
 
@@ -202,6 +271,9 @@ class App extends React.Component {
 					<li>Bonus perks idea: at a randomizer not knowing which color the line get</li>
 					<li>Bonus game: Guess the picture</li>
 				</ul>
+
+				Current player:
+				{this.state.players[this.state.game.currentPlayer].name} ({this.state.players[this.state.game.currentPlayer].color})
 
 				<svg width="100%" height="1000" viewBox="0 0 1000 1000">
 					<g className="box" transform="translate(50,50)">

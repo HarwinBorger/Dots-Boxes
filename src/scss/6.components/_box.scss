@@ -13,20 +13,20 @@
 	&__line-group {
 		&:hover #{$s}__line-hover {
 			position: relative;
-			stroke: red;
+			//stroke: red;
 			z-index: 100;
+			stroke-dasharray: 10;
 			stroke-dashoffset: 0;
 		}
 	}
 
 	&__line,
 	&__line-hover {
-		stroke: black;
+		//stroke: black;
 		stroke-width: 10;
 		cursor: pointer;
 		stroke-dasharray: 90;
 		stroke-dashoffset: -5;
-		stroke-linecap: round;
 
 		transition: all linear .5s;
 		border-radius: 100%;
@@ -35,7 +35,7 @@
 	&__line-hover {
 		stroke-dasharray: 100;
 		stroke-dashoffset: 100;
-		stroke: red;
+		//stroke: red;
 	}
 
 	&__tale {

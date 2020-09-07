@@ -33,8 +33,8 @@ export class Dot extends React.Component {
 export const LineGroup = (props) => {
 	return (
 		<g className="box__line-group" onClick={props.onClick}>
-			<line className="box__line" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}/>
-			<line className="box__line-hover" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}/>
+			<line className="box__line" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2} stroke={props.color}/>
+			<line className="box__line-hover" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}  stroke={props.currentColor}/>
 		</g>
 	);
 };
