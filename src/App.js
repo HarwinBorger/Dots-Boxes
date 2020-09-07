@@ -1,5 +1,5 @@
 import React from 'react';
-import {LineGroup} from './Components/Svg';
+import {LineGroup, Dot} from './Components/Svg';
 import config from './Config/Config';
 
 import './App.css';
@@ -83,7 +83,6 @@ class App extends React.Component {
 		return lines;
 	};
 
-
 	generateDots = () => {
 		/**
 		 * Draw the lines
@@ -100,7 +99,7 @@ class App extends React.Component {
 
 				// Vertical lines
 				dots.push(
-					<circle cx={dot.x} cy={dot.y} r="10" stroke="black" strokeWidth="3" fill="yellow"/>
+					<Dot cx={dot.x} cy={dot.y}/>
 				);
 			}
 		}
@@ -177,7 +176,7 @@ class App extends React.Component {
 					<li>Bonus game: Guess the picture</li>
 				</ul>
 				<svg width="100%" height="1000" viewBox="0 0 1000 1000">
-					<g transform="translate(20,20)">
+					<g transform="translate(50,50)">
 						{squares}
 						{lines}
 						{dots}

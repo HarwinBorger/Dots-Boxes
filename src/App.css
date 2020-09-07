@@ -33,3 +33,12 @@
 .number {
 	pointer-events: none;
 }
+
+.dots{
+	transition: all linear .2s;
+	cursor: pointer;
+}
+
+.dots:hover {
+	fill: lime;
+}

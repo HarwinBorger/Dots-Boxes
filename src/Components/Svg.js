@@ -6,9 +6,38 @@ export const Square = (props) => {
 };
 
 
-export const Dot = (props) => {
-	return (<line className="line" x1={props.tl.x} y1={props.tl.y} x2={props.tr.x} y2={props.tr.y}/>);
-};
+export class Dot extends React.Component {
+	size = {
+		default: 10,
+		hover: 20
+	};
+
+	constructor(props)
+	{
+		super(props);
+
+		this.state = {
+			radius: this.size.default
+		}
+	}
+
+	large()
+	{
+		this.setState({radius: this.size.hover});
+	}
+
+	default()
+	{
+		this.setState({radius: this.size.default});
+	}
+
+	render()
+	{
+		return (
+			<circle onMouseEnter={() => this.large()} onMouseLeave={() => this.default()} className="dots" cx={this.props.cx} cy={this.props.cy} r={this.state.radius} stroke="black"
+			        strokeWidth="3" fill="yellow"/>)
+	}
+}
 
 
 export const LineGroup = (props) => {
