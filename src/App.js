@@ -147,8 +147,6 @@ class App extends React.Component {
 	 * @param id
 	 */
 	setLine = (id) => {
-		console.log(this.state.box.lines[id]);
-
 		// Retrieve several states
 		const game = {...this.state.game};
 		let lines = {...this.state.box.lines};
@@ -166,6 +164,7 @@ class App extends React.Component {
 		// Check if any of the numbers from line has 4 lines connected
 		let success = false; // flag set on true when 1 or more boxes are filled
 		lines[id].numbers.map((number) => {
+			// When number is not a number, we are on the edge, we skip this number
 			if (number === false) {
 				return;
 			}
@@ -188,7 +187,11 @@ class App extends React.Component {
 		}
 	};
 
-	// Function to set box
+	/**
+	 * Set Box
+	 * @param id
+	 * @param player
+	 */
 	setBox = (id, player) => {
 		let tales = {...this.state.box.tales};
 		tales[id].player = player;
@@ -235,6 +238,10 @@ class App extends React.Component {
 		return this.state.players[this.state.game.currentPlayer].color;
 	};
 
+	/**
+	 * Render
+	 * @returns {*}
+	 */
 	render()
 	{
 		let dots = this.generateDots();
