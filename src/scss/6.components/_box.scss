@@ -1,4 +1,6 @@
 $color-black: #000;
+$color-yellow: #FEDC7C;
+
 .box {
 	$s: &;
 
@@ -9,7 +11,7 @@ $color-black: #000;
 		cursor: pointer;
 
 		&:hover {
-			fill: lime;
+			fill: $color-yellow;
 			filter: drop-shadow(0 0 4px rgba($color-black, .5));
 		}
 	}
@@ -33,6 +35,8 @@ $color-black: #000;
 
 		transition: all linear .5s;
 		border-radius: 100%;
+		filter: drop-shadow(0 0 20px rgba($color-black, .5));
+
 	}
 
 	&__line-hover {
@@ -42,7 +46,7 @@ $color-black: #000;
 	}
 
 	&__tale {
-
+		transition: all linear .5s;
 	}
 
 	&__number {

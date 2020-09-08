@@ -40,11 +40,11 @@ class App extends React.Component {
 			players: [
 				{
 					name: 'Albert Einstein',
-					color: 'red'
+					color: '#E0474C'
 				},
 				{
 					name: 'Leonardo da Vinci',
-					color: 'blue'
+					color: '#72A6CA'
 				}
 			],
 			// data to draw the game
@@ -74,7 +74,6 @@ class App extends React.Component {
 					},
 					player: false,
 					number: number,
-					color: '#ccc'
 				};
 			}
 		}
@@ -277,7 +276,7 @@ class App extends React.Component {
 		const player = lines[id].player;
 
 		if (player === false) {
-			return '#ccc';
+			return '#eee';
 		}
 
 		return this.state.players[player].color;
@@ -338,7 +337,7 @@ class App extends React.Component {
 				<g key={tale.number}>
 					<rect className="box__tale" x={x}
 					      y={y} width={config.size} height={config.size}
-					      fill={this.getBoxColor(tale.number)} stroke={"black"} strokeWidth={"12"}/>
+					      fill={this.getBoxColor(tale.number)} stroke={"#222"} strokeWidth={"12"}/>
 					<text className="box__number" x={x + config.size / 2}
 					      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
 					      fill="black">{tale.number}</text>
