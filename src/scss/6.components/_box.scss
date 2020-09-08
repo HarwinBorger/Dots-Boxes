@@ -26,23 +26,17 @@ $color-yellow: #FEDC7C;
 		}
 	}
 
-	&__line,
-	&__line-hover {
+	&__line{
 		stroke-width: 10;
-		//cursor: pointer;
-		stroke-dasharray: 90;
-		stroke-dashoffset: -5;
 
 		transition: all linear .5s;
 		border-radius: 100%;
 		filter: drop-shadow(0 0 20px rgba($color-black, .5));
-
 	}
 
 	&__line-hover {
 		stroke-dasharray: 100;
 		stroke-dashoffset: 100;
-		//stroke: red;
 	}
 
 	&__tale {
@@ -50,12 +44,13 @@ $color-yellow: #FEDC7C;
 	}
 
 	&__number {
+		font-size: 1.5rem;
 		pointer-events: none;
 	}
 
 	&__mouseline {
 		pointer-events: none;
-		filter: drop-shadow(0 0 4px rgba($color-black, .5));
+		filter: drop-shadow(0 0 5px rgba($color-black, .8));
 	}
 }
 

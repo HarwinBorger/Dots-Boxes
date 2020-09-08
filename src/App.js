@@ -4,7 +4,7 @@ import _ from 'lodash';
 // Configs
 import config from './Config/Config';
 // Components
-import {LineGroup, Dot, MouseLine} from './Components/Svg';
+import {LineGroup, Dot, MouseLine, Shadows} from './Components/Svg';
 //  Utilities
 import {getLinePositions} from './Utils/Utils';
 
@@ -276,7 +276,7 @@ class App extends React.Component {
 		const player = lines[id].player;
 
 		if (player === false) {
-			return '#eee';
+			return '#222';
 		}
 
 		return this.state.players[player].color;
@@ -340,7 +340,7 @@ class App extends React.Component {
 					      fill={this.getBoxColor(tale.number)} stroke={"#222"} strokeWidth={"12"}/>
 					<text className="box__number" x={x + config.size / 2}
 					      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
-					      fill="black">{tale.number}</text>
+					      fill="black">{tale.number+1}</text>
 				</g>
 			)
 		});
