@@ -21,7 +21,7 @@ export class Dot extends React.Component {
 	render()
 	{
 		return (
-			<circle onClick={this.props.onClick} onMouseEnter={() => this.setState({radius: this.size.hover})} onMouseLeave={() => this.setState({radius: this.size.default})} className="box__dot" cx={this.props.cx} cy={this.props.cy} r={this.state.radius} stroke="black"
+			<circle onClick={this.props.onClick} onMouseEnter={() => this.setState({radius: this.size.hover})} onMouseLeave={() => this.setState({radius: this.size.default})} className={`box__dot box__dot--${this.props.modifier}`} cx={this.props.cx} cy={this.props.cy} r={this.state.radius} stroke="black"
 			        strokeWidth="3" fill={this.props.currentColor}/>)
 	}
 }

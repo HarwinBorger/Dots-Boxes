@@ -29,7 +29,8 @@ class App extends React.Component {
 				mouseLine: {
 					id: false,
 					x: 0,
-					y: 0
+					y: 0,
+					options: false
 				},
 				mouse: {
 					x: false,
@@ -138,6 +139,10 @@ class App extends React.Component {
 		return lineData;
 	};
 
+	/**
+	 * Generate Dot Data
+	 * @returns {Array}
+	 */
 	generateDotData = () => {
 		/**
 		 * Draw the lines
@@ -163,19 +168,43 @@ class App extends React.Component {
 		return dots;
 	};
 
+	/**
+	 * Draw a line on mouse click
+	 * @param id
+	 */
 	drawLine = (id) => {
+		// Retrieve state data
 		const dots = {...this.state.box.dots};
 		const game = {...this.state.game};
+		const lines = {...this.state.box.lines};
 
+		// Create shorthand variables
 		let x = dots[id].pos.x;
 		let y = dots[id].pos.y;
 		let mx = game.mouseLine.x;
 		let my = game.mouseLine.y;
 
-		let match = false;
+		// Show possible options
+		let optionLines = _.filter(lines, function (line) {
+			return (
+				((line.pos.x1 === x && line.pos.y1 === y) || (line.pos.x2 === x && line.pos.y2 === y)) &&
+				(line.player === false)
+			)
+		});
+
+		let optionDots = _.filter(dots, function(dot){
+			let optionMatch = _.filter(optionLines, function(option){
+				return (option.pos.x1 === dot.pos.x && option.pos.y1 === dot.pos.y) || (option.pos.x2 === dot.pos.x && option.pos.y2 === dot.pos.y)
+			});
+
+			return optionMatch.length;
+		});
+
+		let options = _.map(optionDots, 'id');
+
 		// WHEN the 1th DOT and 2nd DOT are not identical try to find connected LINE
+		let match = false;
 		if (id !== game.mouseLine.id && game.mouseLine.id !== false) {
-			const lines = {...this.state.box.lines};
 
 			// Note: finding the line is a bit tricky, since we use coordinates to find them
 			// Check if a line matches the tale
@@ -193,12 +222,14 @@ class App extends React.Component {
 			id = false;
 			x = false;
 			y = false;
+			options = false;
 		}
 
 		// Write back new data to the mouse line
 		game.mouseLine.id = id;
 		game.mouseLine.x = x;
 		game.mouseLine.y = y;
+		game.mouseLine.options = options;
 
 		this.setState({game});
 
@@ -322,6 +353,14 @@ class App extends React.Component {
 		this.setState({game});
 	};
 
+	getDotOptionClass = (id) => {
+		if (this.state.game.mouseLine.options && this.state.game.mouseLine.options.includes(id)) {
+			return 'active'
+		}
+
+		return ''
+	};
+
 	/**
 	 * Render
 	 * @returns {*}
@@ -340,7 +379,7 @@ class App extends React.Component {
 					      fill={this.getBoxColor(tale.number)} stroke={"#222"} strokeWidth={"12"}/>
 					<text className="box__number" x={x + config.size / 2}
 					      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
-					      fill="black">{tale.number+1}</text>
+					      fill="black">{tale.number + 1}</text>
 				</g>
 			)
 		});
@@ -364,7 +403,8 @@ class App extends React.Component {
 		// Draw dots
 		let dots = this.state.box.dots.map((dot) => {
 			return (
-				<Dot onClick={() => this.drawLine(dot.id)} key={dot.id} cx={dot.pos.x} cy={dot.pos.y} currentColor={this.getCurrentPlayerColor()}/>
+				<Dot onClick={() => this.drawLine(dot.id)} key={dot.id} cx={dot.pos.x} cy={dot.pos.y}
+				     currentColor={this.getCurrentPlayerColor()} modifier={this.getDotOptionClass(dot.id)}/>
 			);
 		});
 

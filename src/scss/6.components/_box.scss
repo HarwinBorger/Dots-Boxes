@@ -12,7 +12,11 @@ $color-yellow: #FEDC7C;
 
 		&:hover {
 			fill: $color-yellow;
-			filter: drop-shadow(0 0 4px rgba($color-black, .5));
+			filter: drop-shadow(0 0 4px rgba($color-black, .5)); // works only in Firefox :(
+		}
+
+		&--active{
+			fill: $color-yellow;
 		}
 	}
 
@@ -31,7 +35,7 @@ $color-yellow: #FEDC7C;
 
 		transition: all linear .5s;
 		border-radius: 100%;
-		filter: drop-shadow(0 0 20px rgba($color-black, .5));
+		filter: drop-shadow(0 0 20px rgba($color-black, .5)); // works only in Firefox :(
 	}
 
 	&__line-hover {
@@ -50,7 +54,7 @@ $color-yellow: #FEDC7C;
 
 	&__mouseline {
 		pointer-events: none;
-		filter: drop-shadow(0 0 5px rgba($color-black, .8));
+		filter: drop-shadow(0 0 5px rgba($color-black, .8)); // works only in Firefox :(
 	}
 }
 
