@@ -173,22 +173,19 @@ class App extends React.Component {
 		let mx = game.mouseLine.x;
 		let my = game.mouseLine.y;
 
+		let match = false;
 		// WHEN the 1th DOT and 2nd DOT are not identical try to find connected LINE
 		if (id !== game.mouseLine.id && game.mouseLine.id !== false) {
 			const lines = {...this.state.box.lines};
 
 			// Note: finding the line is a bit tricky, since we use coordinates to find them
 			// Check if a line matches the tale
-			let match = _.filter(lines, function (line) {
+			match = _.filter(lines, function (line) {
 				return (
-					(line.pos.x1 === x && line.pos.y1 === y || line.pos.x2 === x && line.pos.y2 === y) &&
-					(line.pos.x1 === mx && line.pos.y1 === my || line.pos.x2 === mx && line.pos.y2 === my)
+					((line.pos.x1 === x && line.pos.y1 === y) || (line.pos.x2 === x && line.pos.y2 === y)) &&
+					((line.pos.x1 === mx && line.pos.y1 === my) || (line.pos.x2 === mx && line.pos.y2 === my))
 				)
 			});
-
-			if (match.length === 1) {
-				this.setLine(_.first(match).id);
-			}
 		}
 
 		// IF same dot is clicked THEN cancel current line
@@ -205,6 +202,10 @@ class App extends React.Component {
 		game.mouseLine.y = y;
 
 		this.setState({game});
+
+		if (match.length === 1) {
+			this.setLine(_.first(match).id);
+		}
 	};
 
 	/**
@@ -214,7 +215,7 @@ class App extends React.Component {
 	setLine = (id) => {
 		// Retrieve several states
 		const game = {...this.state.game};
-		let lines = {...this.state.box.lines};
+		const lines = {...this.state.box.lines};
 
 		// Check if player is allowed to set this line
 		if (lines[id].player !== false) {
@@ -246,9 +247,10 @@ class App extends React.Component {
 		});
 
 		// If player didn't succeed, then switch to other player
-		if (success === false) {
+		if (success !== true) {
 			// Switch between players
 			game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
+
 			this.setState({game});
 		}
 	};
@@ -312,8 +314,8 @@ class App extends React.Component {
 
 		// Create SVG point to capture relative mouse position within SVG component
 		let point = this.svg.createSVGPoint();
-		point.x = e.clientX - config.offset;
-		point.y = e.clientY - config.offset;
+		point.x = e.clientX;
+		point.y = e.clientY;
 		game.mouse = point.matrixTransform(this.svg.getScreenCTM().inverse());
 
 		// Write back relative mouse position to state
@@ -366,39 +368,27 @@ class App extends React.Component {
 		});
 
 		let viewportOffset = config.offset;
-		let viewportWidth = config.width * config.size + viewportOffset * 2;
-		let viewportHeight = config.height * config.size + viewportOffset * 2;
+		let viewportWidth = config.width * config.size + config.offset*-2;
+		let viewportHeight = config.height * config.size + config.offset*-2;
 
 		return (
 			<div className="App">
-				Ideas:
-				<ul>
-					<li>Make default game work</li>
-					<li>Bonus perks idea: at a randomizer not knowing which color the line get</li>
-					<li>Bonus game: Guess the picture</li>
-				</ul>
-
-				Start line X: {this.state.game.mouseLine.x}
-				Start line Y: {this.state.game.mouseLine.y}
-
 				Current player:
 				{this.state.players[this.state.game.currentPlayer].name} ({this.state.players[this.state.game.currentPlayer].color})
 
 				<svg className={"box"} width="100%" height="1000"
-				     viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
+				     viewBox={`${viewportOffset},${viewportOffset} ${viewportWidth} ${viewportHeight}`}
 				     onMouseMove={(e) => this.handleMouseMove(e)}
 				     ref={(svg) => this.svg = svg}>
-					<g transform={`translate(${viewportOffset},${viewportOffset})`}>
-						{squares}
-						{lines}
-						{dots}
+					{squares}
+					{lines}
+					{dots}
 
-						<MouseLine id={this.state.game.mouseLine.id}
-						           x1={this.state.game.mouseLine.x}
-						           y1={this.state.game.mouseLine.y}
-						           x2={this.state.game.mouse.x}
-						           y2={this.state.game.mouse.y}/>
-					</g>
+					<MouseLine id={this.state.game.mouseLine.id}
+					           x1={this.state.game.mouseLine.x}
+					           y1={this.state.game.mouseLine.y}
+					           x2={this.state.game.mouse.x}
+					           y2={this.state.game.mouse.y}/>
 				</svg>
 			</div>
 		);
