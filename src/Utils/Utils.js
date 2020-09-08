@@ -33,6 +33,15 @@ export default class Utils {
 		};
 	};
 
+	/**
+	 * getOptions
+	 * @description function to retrieve connected dots to lines based on coordinates
+	 * @param lines
+	 * @param dots
+	 * @param x
+	 * @param y
+	 * @returns {Array}
+	 */
 	static getOptions = (lines, dots, x, y) => {
 		let optionLines = _.filter(lines, function (line) {
 			return (

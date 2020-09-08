@@ -12,7 +12,7 @@ import './App.css';
 
 /**
  * Box game
- *
+ * // Todo something causes to load game twice, shouldn't be happening
  */
 
 class App extends React.Component {
