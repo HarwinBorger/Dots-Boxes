@@ -1,3 +1,4 @@
+$color-black: #000;
 .box {
 	$s: &;
 
@@ -9,6 +10,7 @@
 
 		&:hover {
 			fill: lime;
+			filter: drop-shadow(0 0 4px rgba($color-black, .5));
 		}
 	}
 
@@ -25,7 +27,7 @@
 	&__line,
 	&__line-hover {
 		stroke-width: 10;
-		cursor: pointer;
+		//cursor: pointer;
 		stroke-dasharray: 90;
 		stroke-dashoffset: -5;
 
@@ -49,6 +51,7 @@
 
 	&__mouseline {
 		pointer-events: none;
+		filter: drop-shadow(0 0 4px rgba($color-black, .5));
 	}
 }
 

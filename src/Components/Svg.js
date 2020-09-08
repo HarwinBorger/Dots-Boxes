@@ -22,7 +22,7 @@ export class Dot extends React.Component {
 	{
 		return (
 			<circle onClick={this.props.onClick} onMouseEnter={() => this.setState({radius: this.size.hover})} onMouseLeave={() => this.setState({radius: this.size.default})} className="box__dot" cx={this.props.cx} cy={this.props.cy} r={this.state.radius} stroke="black"
-			        strokeWidth="3" fill="yellow"/>)
+			        strokeWidth="3" fill={this.props.currentColor}/>)
 	}
 }
 
@@ -37,7 +37,7 @@ export const LineGroup = (props) => {
 	return (
 		<g className="box__line-group" onClick={props.onClick}>
 			<line className="box__line" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2} stroke={props.color}/>
-			<line className="box__line-hover" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}  stroke={props.currentColor}/>
+			{/*<line className="box__line-hover" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}  stroke={props.currentColor}/>*/}
 		</g>
 	);
 };
@@ -60,7 +60,8 @@ export class MouseLine extends React.Component {
 			      y1={this.props.y1}
 			      x2={this.props.x2}
 			      y2={this.props.y2}
-			      stroke="black" strokeWidth="10" strokeLinecap={"round"}/>
+			      stroke={this.props.currentColor}
+			      strokeWidth="10" strokeLinecap={"round"}/>
 		)
 	}
 }

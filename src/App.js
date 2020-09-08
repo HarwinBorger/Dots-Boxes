@@ -203,6 +203,7 @@ class App extends React.Component {
 
 		this.setState({game});
 
+		// Set line after we are done, other wise 'setStates' conflicts
 		if (match.length === 1) {
 			this.setLine(_.first(match).id);
 		}
@@ -337,7 +338,7 @@ class App extends React.Component {
 				<g key={tale.number}>
 					<rect className="box__tale" x={x}
 					      y={y} width={config.size} height={config.size}
-					      fill={this.getBoxColor(tale.number)}/>
+					      fill={this.getBoxColor(tale.number)} stroke={"black"} strokeWidth={"12"}/>
 					<text className="box__number" x={x + config.size / 2}
 					      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
 					      fill="black">{tale.number}</text>
@@ -348,14 +349,15 @@ class App extends React.Component {
 		// Draw lines
 		let lines = this.state.box.lines.map((line) => {
 			return (
-				<LineGroup onClick={() => this.setLine(line.id)}
-				           key={line.id}
-				           x1={line.pos.x1}
-				           y1={line.pos.y1}
-				           x2={line.pos.x2}
-				           y2={line.pos.y2}
-				           color={this.getLineColor(line.id)}
-				           currentColor={this.getCurrentPlayerColor()}
+				<LineGroup
+					//onClick={() => this.setLine(line.id)} // This functionality is replace by line drag
+					key={line.id}
+					x1={line.pos.x1}
+					y1={line.pos.y1}
+					x2={line.pos.x2}
+					y2={line.pos.y2}
+					color={this.getLineColor(line.id)}
+					currentColor={this.getCurrentPlayerColor()}
 				/>
 			);
 		});
@@ -363,13 +365,13 @@ class App extends React.Component {
 		// Draw dots
 		let dots = this.state.box.dots.map((dot) => {
 			return (
-				<Dot onClick={() => this.drawLine(dot.id)} key={dot.id} cx={dot.pos.x} cy={dot.pos.y}/>
+				<Dot onClick={() => this.drawLine(dot.id)} key={dot.id} cx={dot.pos.x} cy={dot.pos.y} currentColor={this.getCurrentPlayerColor()}/>
 			);
 		});
 
 		let viewportOffset = config.offset;
-		let viewportWidth = config.width * config.size + config.offset*-2;
-		let viewportHeight = config.height * config.size + config.offset*-2;
+		let viewportWidth = config.width * config.size + config.offset * -2;
+		let viewportHeight = config.height * config.size + config.offset * -2;
 
 		return (
 			<div className="App">
@@ -384,11 +386,14 @@ class App extends React.Component {
 					{lines}
 					{dots}
 
-					<MouseLine id={this.state.game.mouseLine.id}
-					           x1={this.state.game.mouseLine.x}
-					           y1={this.state.game.mouseLine.y}
-					           x2={this.state.game.mouse.x}
-					           y2={this.state.game.mouse.y}/>
+					<MouseLine
+						id={this.state.game.mouseLine.id}
+						x1={this.state.game.mouseLine.x}
+						y1={this.state.game.mouseLine.y}
+						x2={this.state.game.mouse.x}
+						y2={this.state.game.mouse.y}
+						currentColor={this.getCurrentPlayerColor()}
+					/>
 				</svg>
 			</div>
 		);
