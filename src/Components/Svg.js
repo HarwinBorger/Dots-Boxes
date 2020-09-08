@@ -1,11 +1,8 @@
 import React from "react";
 
-
-export const Square = (props) => {
-	return (<line className="line" x1={props.tl.x} y1={props.tl.y} x2={props.tr.x} y2={props.tr.y}/>);
-};
-
-
+/**
+ * Dot class
+ */
 export class Dot extends React.Component {
 	size = {
 		default: 10,
@@ -30,6 +27,12 @@ export class Dot extends React.Component {
 }
 
 
+/**
+ * Linen Group
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 export const LineGroup = (props) => {
 	return (
 		<g className="box__line-group" onClick={props.onClick}>
@@ -38,3 +41,26 @@ export const LineGroup = (props) => {
 		</g>
 	);
 };
+
+export class MouseLine extends React.Component {
+	constructor(props){
+		super(props);
+
+		console.log(props);
+	}
+
+	render(){
+		if(this.props.id === false){
+			return (null);
+		}
+
+		return(
+			<line className="box__mouseline"
+			      x1={this.props.x1}
+			      y1={this.props.y1}
+			      x2={this.props.x2}
+			      y2={this.props.y2}
+			      stroke="black" strokeWidth="10" strokeLinecap={"round"}/>
+		)
+	}
+}

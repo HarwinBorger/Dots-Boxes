@@ -4,7 +4,7 @@ import _ from 'lodash';
 // Configs
 import config from './Config/Config';
 // Components
-import {LineGroup, Dot} from './Components/Svg';
+import {LineGroup, Dot, MouseLine} from './Components/Svg';
 //  Utilities
 import {getLinePositions} from './Utils/Utils';
 
@@ -12,10 +12,10 @@ import './App.css';
 
 /**
  * Box game
+ *
  */
 
 class App extends React.Component {
-
 	constructor()
 	{
 		super();
@@ -27,6 +27,7 @@ class App extends React.Component {
 			game: {
 				currentPlayer: 0,
 				mouseLine: {
+					id: false,
 					x: 0,
 					y: 0
 				},
@@ -167,8 +168,41 @@ class App extends React.Component {
 		const dots = {...this.state.box.dots};
 		const game = {...this.state.game};
 
-		game.mouseLine.x = dots[id].pos.x;
-		game.mouseLine.y = dots[id].pos.y;
+		let x = dots[id].pos.x;
+		let y = dots[id].pos.y;
+		let mx = game.mouseLine.x;
+		let my = game.mouseLine.y;
+
+		// WHEN the 1th DOT and 2nd DOT are not identical try to find connected LINE
+		if (id !== game.mouseLine.id && game.mouseLine.id !== false) {
+			const lines = {...this.state.box.lines};
+
+			// Note: finding the line is a bit tricky, since we use coordinates to find them
+			// Check if a line matches the tale
+			let match = _.filter(lines, function (line) {
+				return (
+					(line.pos.x1 === x && line.pos.y1 === y || line.pos.x2 === x && line.pos.y2 === y) &&
+					(line.pos.x1 === mx && line.pos.y1 === my || line.pos.x2 === mx && line.pos.y2 === my)
+				)
+			});
+
+			if (match.length === 1) {
+				this.setLine(_.first(match).id);
+			}
+		}
+
+		// IF same dot is clicked THEN cancel current line
+		// OR when line is already connected THEN also cancel current line
+		if (id === game.mouseLine.id || game.mouseLine.id !== false) {
+			id = false;
+			x = false;
+			y = false;
+		}
+
+		// Write back new data to the mouse line
+		game.mouseLine.id = id;
+		game.mouseLine.x = x;
+		game.mouseLine.y = y;
 
 		this.setState({game});
 	};
@@ -184,7 +218,6 @@ class App extends React.Component {
 
 		// Check if player is allowed to set this line
 		if (lines[id].player !== false) {
-			alert('Leuk geprobeerd! ;-)');
 			return
 		}
 
@@ -200,10 +233,12 @@ class App extends React.Component {
 				return;
 			}
 
+			// Check if a line matches the tale
 			let match = _.filter(lines, function (line) {
 				return line.numbers.includes(number) && line.player !== false;
 			});
 
+			// When the tale has 4 lines set connect player to it
 			if (match.length === 4) {
 				this.setBox(number, game.currentPlayer);
 				success = true;
@@ -349,21 +384,20 @@ class App extends React.Component {
 				Current player:
 				{this.state.players[this.state.game.currentPlayer].name} ({this.state.players[this.state.game.currentPlayer].color})
 
-				<svg width="100%" height="1000"
+				<svg className={"box"} width="100%" height="1000"
 				     viewBox={`0 0 ${viewportWidth} ${viewportHeight}`}
 				     onMouseMove={(e) => this.handleMouseMove(e)}
 				     ref={(svg) => this.svg = svg}>
-					<g className="box" transform={`translate(${viewportOffset},${viewportOffset})`}>
+					<g transform={`translate(${viewportOffset},${viewportOffset})`}>
 						{squares}
 						{lines}
 						{dots}
 
-						<line className="box__mouseline"
-						      x1={this.state.game.mouseLine.x}
-						      y1={this.state.game.mouseLine.y}
-						      x2={this.state.game.mouse.x}
-						      y2={this.state.game.mouse.y}
-						      stroke="black" strokeWidth="10" strokeLinecap={"round"}/>
+						<MouseLine id={this.state.game.mouseLine.id}
+						           x1={this.state.game.mouseLine.x}
+						           y1={this.state.game.mouseLine.y}
+						           x2={this.state.game.mouse.x}
+						           y2={this.state.game.mouse.y}/>
 					</g>
 				</svg>
 			</div>

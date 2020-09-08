@@ -1,6 +1,8 @@
 .box {
 	$s: &;
 
+	will-change: auto;
+
 	&__dot {
 		transition: all linear .2s;
 		cursor: pointer;
