@@ -4,9 +4,9 @@ import _ from 'lodash';
 // Configs
 import config from './Config/Config';
 // Components
-import {LineGroup, Dot, MouseLine, Shadows} from './Components/Svg';
+import {LineGroup, Dot, MouseLine} from './Components/Svg';
 //  Utilities
-import {getLinePositions} from './Utils/Utils';
+import Utils from './Utils/Utils';
 
 import './App.css';
 
@@ -92,7 +92,7 @@ class App extends React.Component {
 		for (let x = 0; x <= config.width; x++) {
 			for (let y = 0; y <= config.height; y++) {
 
-				const pos = getLinePositions(x, y, config.size);
+				const pos = Utils.getLinePositions(x, y, config.size);
 				const numberCurrent = (config.width * y) + x;
 
 				// Todo horizontal and vertical use exact same script, should be put into function to centralize functionality
@@ -184,29 +184,14 @@ class App extends React.Component {
 		let mx = game.mouseLine.x;
 		let my = game.mouseLine.y;
 
-		// Show possible options
-		let optionLines = _.filter(lines, function (line) {
-			return (
-				((line.pos.x1 === x && line.pos.y1 === y) || (line.pos.x2 === x && line.pos.y2 === y)) &&
-				(line.player === false)
-			)
-		});
-
-		let optionDots = _.filter(dots, function(dot){
-			let optionMatch = _.filter(optionLines, function(option){
-				return (option.pos.x1 === dot.pos.x && option.pos.y1 === dot.pos.y) || (option.pos.x2 === dot.pos.x && option.pos.y2 === dot.pos.y)
-			});
-
-			return optionMatch.length;
-		});
-
-		let options = _.map(optionDots, 'id');
+		// Show possible options in yellow dots
+		let options = Utils.getOptions(lines, dots, x, y);
 
 		// WHEN the 1th DOT and 2nd DOT are not identical try to find connected LINE
 		let match = false;
 		if (id !== game.mouseLine.id && game.mouseLine.id !== false) {
 
-			// Note: finding the line is a bit tricky, since we use coordinates to find them
+			// Note: finding the line is a bit tricky, since we use coordinates to find them, should use ID's instead
 			// Check if a line matches the tale
 			match = _.filter(lines, function (line) {
 				return (
