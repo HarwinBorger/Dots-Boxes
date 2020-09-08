@@ -1,5 +1,6 @@
 export default {
-	width: 5,
-	height: 5,
+	offset: 50,
+	width: 10,
+	height: 10,
 	size: 100
 };
