@@ -76,7 +76,7 @@ export class MouseLine extends React.Component {
  * @returns {*}
  * @constructor
  */
-export const Tale = (props) =>{
+export const Tale = (props) => {
 	return (
 		<g>
 			<rect className="box__tile" x={props.x}
@@ -98,7 +98,8 @@ export const Tale = (props) =>{
 export const Player = (props) => {
 	return (
 		<g className={"players__player player " + (props.currentPlayer ? 'player--current' : '')}>
-			<circle className={"player__circle"} cx={props.cx} cy={-50} fill="#48443C" r={"50"} strokeDasharray={157/props.score} stroke={(props.currentPlayer ? '#FEDC7C' : props.fill  )}/>
+			<circle className={"player__circle"} cx={props.cx} cy={-50} fill="#48443C" r={"50"}
+			        strokeDasharray={157 / props.score} stroke={(props.currentPlayer ? '#FEDC7C' : props.fill)}/>
 			<text className="player__score" x={props.cx}
 			      y={-45} dominantBaseline="middle" textAnchor="middle"
 			      fill={props.fill}>{props.score}</text>
@@ -107,4 +108,19 @@ export const Player = (props) => {
 			      fill="black">{props.name}</text>
 		</g>
 	);
+};
+
+export const Winner = (props) => {
+	if (props.player === false) {
+		return (null);
+	}
+
+	return (
+			<g className={"winner"} transform={`translate(${props.offset},0)`} onClick={props.onClick}>
+				<rect className="winner__rect" x="-400" width="400" height="100"
+				      fill={"black"}/>
+				<text className={"winner__text"} x={`-${props.offset/2}`} y ="50" dominantBaseline="middle"
+				      textAnchor="middle">{props.player}</text>
+			</g>
+	)
 };

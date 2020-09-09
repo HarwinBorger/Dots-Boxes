@@ -4,9 +4,10 @@ import _ from 'lodash';
 // Configs
 import config from './config/config';
 // Components
-import {LineGroup, Dot, MouseLine, Player, Tale} from './components/Svg';
+import {LineGroup, Dot, MouseLine, Player, Tale, Winner} from './components/Svg';
 //  Utilities
 import utils from './utils/utils';
+import enums from './enums/enums';
 
 import './App.css';
 
@@ -40,6 +41,7 @@ class App extends React.Component {
 					x: false,
 					y: false,
 				},
+				winner: false,
 			},
 			// player data
 			players: [
@@ -298,6 +300,8 @@ class App extends React.Component {
 		let tiles = {...this.state.box.tiles};
 		tiles[id].player = player;
 		this.setState(tiles);
+
+		this.isFinish()
 	};
 
 	/**
@@ -394,6 +398,47 @@ class App extends React.Component {
 	};
 
 	/**
+	 * Is the game finished?
+	 * @returns {boolean}
+	 */
+	isFinish = () =>{
+		const tiles = this.state.box.tiles;
+
+		let playerTiles = _.filter(tiles, (tale) => {
+			return tale.player !== false;
+		});
+
+		if(tiles.length === playerTiles.length){
+			const game = {...this.state.game};
+
+			if(this.getPlayerScore(0) > this.getPlayerScore(1)){
+				game.winner = 0;
+			}else if(this.getPlayerScore(1) > this.getPlayerScore(0)) {
+				game.winner = 1;
+			}else{
+				game.winner = enums.equal;
+			}
+
+			this.setState({game});
+
+			return true;
+		}
+
+		return false;
+	};
+
+
+	getWinner = (id) =>{
+		if(id===false){
+			return false;
+		}else if(id===enums.equal){
+			return 'Draw!'
+		}else{
+			return this.state.players[id].name + ' won the game!';
+		}
+	};
+
+	/**
 	 * Render
 	 * @returns {*}
 	 */
@@ -469,6 +514,8 @@ class App extends React.Component {
 					        currentPlayer={this.isCurrentPlayer(1)}/>
 
 			        <text onClick={this.restartGame} x={250} y={'90%'} dominantBaseline="middle" textAnchor="middle" fill="white">Restart</text>
+
+					<Winner onClick={this.restartGame} offset={viewportWidth/2} player={this.getWinner(this.state.game.winner)} />
 				</svg>
 			</div>
 		);

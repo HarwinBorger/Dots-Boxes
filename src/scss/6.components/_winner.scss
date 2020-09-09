@@ -1,0 +1,27 @@
+.winner{
+	&__rect{
+		fill: black;
+		stroke: $color-yellow;
+		stroke-width: 10;
+		stroke-dasharray: 10;
+		-webkit-animation: winner linear 30s;
+		-o-animation: winner linear 30s;
+		animation: winner linear 30s;
+	}
+
+	&__text{
+		font-size: 32px;
+		width: 500px;
+		fill: $color-yellow;
+	}
+}
+
+@keyframes winner {
+	0%{
+		stroke-dashoffset: 0;
+	}
+
+	100%{
+		stroke-dashoffset: 500;
+	}
+}
