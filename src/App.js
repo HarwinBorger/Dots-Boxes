@@ -155,9 +155,6 @@ class App extends React.Component {
 	 * @returns {Array}
 	 */
 	generateDotData = () => {
-		/**
-		 * Draw the lines
-		 */
 		const dots = [];
 		let id = 0;
 		// Loop through rows
