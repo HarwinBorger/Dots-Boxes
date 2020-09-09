@@ -5,6 +5,8 @@ $color-yellow: #FEDC7C;
 	$s: &;
 
 	will-change: auto;
+	background: #6B675E;
+	user-select: none;
 
 	&__dot {
 		transition: all linear .2s;
@@ -20,27 +22,12 @@ $color-yellow: #FEDC7C;
 		}
 	}
 
-	&__line-group {
-		&:hover #{$s}__line-hover {
-			position: relative;
-			//stroke: red;
-			z-index: 100;
-			stroke-dasharray: 10;
-			stroke-dashoffset: 0;
-		}
-	}
-
 	&__line{
 		stroke-width: 6;
 
 		transition: all linear .5s;
 		border-radius: 100%;
 		filter: drop-shadow(0 0 20px rgba($color-black, .5)); // works only in Firefox :(
-	}
-
-	&__line-hover {
-		stroke-dasharray: 100;
-		stroke-dashoffset: 100;
 	}
 
 	&__tale {

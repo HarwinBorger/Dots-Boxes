@@ -1,4 +1,5 @@
 import React from "react";
+import config from "../config/config";
 
 /**
  * Dot class
@@ -38,11 +39,7 @@ export class Dot extends React.Component {
  */
 export const LineGroup = (props) => {
 	return (
-		<g className="box__line-group" onClick={props.onClick}>
-			<line className="box__line" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2} stroke={props.color}/>
-
-			{/*<line className="box__line-hover" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2}  stroke={props.currentColor}/>*/}
-		</g>
+		<line className="box__line" x1={props.x1} y1={props.y1} x2={props.x2} y2={props.y2} stroke={props.color}/>
 	);
 };
 
@@ -50,8 +47,6 @@ export class MouseLine extends React.Component {
 	constructor(props)
 	{
 		super(props);
-
-		console.log(props);
 	}
 
 	render()
@@ -71,3 +66,17 @@ export class MouseLine extends React.Component {
 		)
 	}
 }
+
+export const Player = (props) => {
+	return (
+		<g className={"players__player player " + (props.currentPlayer ? 'player--current' : '')}>
+			<circle className={"player__circle"} cx={props.cx} cy={-50} fill="#48443C" r={"50"} strokeDasharray={157/props.score} stroke={(props.currentPlayer ? props.fill : 'black')}/>
+			<text className="player__score" x={props.cx}
+			      y={-45} dominantBaseline="middle" textAnchor="middle"
+			      fill={props.fill}>{props.score}</text>
+			<text className="player__name" x={props.cx}
+			      y={25} dominantBaseline="middle" textAnchor="middle"
+			      fill="black">{props.name}</text>
+		</g>
+	);
+};

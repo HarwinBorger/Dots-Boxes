@@ -4,7 +4,7 @@ import _ from 'lodash';
 // Configs
 import config from './config/config';
 // Components
-import {LineGroup, Dot, MouseLine} from './components/Svg';
+import {LineGroup, Dot, MouseLine, Player} from './components/Svg';
 //  Utilities
 import utils from './utils/utils';
 
@@ -66,7 +66,7 @@ class App extends React.Component {
 
 		for (let y = 0; y < config.height; y++) {
 			for (let x = 0; x < config.width; x++) {
-				const tileNumber = utils.calcTileNumber(x,y, config.width);
+				const tileNumber = utils.calcTileNumber(x, y, config.width);
 				tileData[tileNumber] = {
 					pos: {
 						x: x,
@@ -92,7 +92,7 @@ class App extends React.Component {
 			for (let x = 0; x <= config.width; x++) {
 
 				const pos = utils.getLinePositions(x, y, config.size);
-				const baseNumber = utils.calcTileNumber(x,y, config.width);
+				const baseNumber = utils.calcTileNumber(x, y, config.width);
 
 				// Todo horizontal and vertical use exact same script, should be put into function to centralize functionality
 				// Horizontal line
@@ -150,7 +150,7 @@ class App extends React.Component {
 		const dots = [];
 		let id = 0;
 		// Loop through rows
-		for (let y  = 0; y  <= config.height; y ++) {
+		for (let y = 0; y <= config.height; y++) {
 			// Loop through column
 			for (let x = 0; x <= config.width; x++) {
 				dots[id] = {
@@ -185,7 +185,7 @@ class App extends React.Component {
 		let my = game.mouseLine.y;
 
 		// Show possible options in yellow dots
-		let options = utils.getOptions(lines, dots, x, y);
+		let options = utils.getPossibleOptions(lines, dots, x, y);
 
 		// WHEN the 1th DOT and 2nd DOT are not identical try to find connected LINE
 		let match = false;
@@ -263,12 +263,22 @@ class App extends React.Component {
 
 		// If player didn't succeed, then switch to other player
 		if (success !== true) {
-			// Switch between players
-			game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
-
-			this.setState({game});
+			this.switchPlayer();
 		}
 	};
+
+	/**
+	 * Switch Player
+	 */
+	switchPlayer()
+	{
+		const game = {...this.state.game};
+
+		// Switch between players
+		game.currentPlayer = 1 - game.currentPlayer; // Toggle to other player
+
+		this.setState({game});
+	}
 
 	/**
 	 * Set Box
@@ -291,7 +301,7 @@ class App extends React.Component {
 		const player = lines[id].player;
 
 		if (player === false) {
-			return '#222';
+			return '#49453D';
 		}
 
 		return this.state.players[player].color;
@@ -306,7 +316,7 @@ class App extends React.Component {
 		const tiles = {...this.state.box.tiles};
 		const player = tiles[id].player;
 		if (player === false) {
-			return 'white';
+			return '#6B675E';
 		}
 
 		return this.state.players[player].color;
@@ -348,6 +358,30 @@ class App extends React.Component {
 		}
 
 		return ''
+	};
+
+
+	/**
+	 * Get Player Score
+	 * @param id
+	 */
+	getPlayerScore = (id) => {
+		const tiles = this.state.box.tiles;
+
+		let score = _.filter(tiles, (tale) => {
+			return tale.player === id;
+		});
+
+		return score.length;
+	};
+
+	/**
+	 * is Current Player
+	 * @param id
+	 * @returns {boolean}
+	 */
+	isCurrentPlayer = (id) => {
+		return id === this.state.game.currentPlayer;
 	};
 
 	/**
@@ -404,11 +438,8 @@ class App extends React.Component {
 
 		return (
 			<div className="App">
-				Current player:
-				{this.state.players[this.state.game.currentPlayer].name} ({this.state.players[this.state.game.currentPlayer].color})
-
-				<svg className={"box"} width="100%" height="1000"
-				     viewBox={`${viewportOffsetX},${viewportOffsetY} ${viewportWidth} ${viewportHeight}`}
+				<svg className={"box"} width="100%" height="100vh"
+				     viewBox={`${viewportOffsetX} ${viewportOffsetY} ${viewportWidth} ${viewportHeight}`}
 				     onMouseMove={(e) => this.handleMouseMove(e)}
 				     ref={(svg) => this.svg = svg}>
 					{squares}
@@ -423,6 +454,17 @@ class App extends React.Component {
 						y2={this.state.game.mouse.y}
 						currentColor={this.getCurrentPlayerColor()}
 					/>
+
+					<Player cx={'-100'} cy={0}
+					        fill={this.state.players[0].color}
+					        score={this.getPlayerScore(0)}
+					        name={this.state.players[0].name}
+					        currentPlayer={this.isCurrentPlayer(0)}/>
+					<Player cx={viewportWidth - 100 * 3} cy={0}
+					        fill={this.state.players[1].color}
+					        score={this.getPlayerScore(1)}
+					        name={this.state.players[1].name}
+					        currentPlayer={this.isCurrentPlayer(1)}/>
 				</svg>
 			</div>
 		);

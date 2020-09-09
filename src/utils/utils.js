@@ -45,7 +45,7 @@ export default class Utils {
 	};
 
 	/**
-	 * getOptions
+	 * get Possible Options
 	 * @description function to retrieve connected dots to lines based on coordinates
 	 * @param lines
 	 * @param dots
@@ -53,7 +53,7 @@ export default class Utils {
 	 * @param y
 	 * @returns {Array}
 	 */
-	static getOptions = (lines, dots, x, y) => {
+	static getPossibleOptions = (lines, dots, x, y) => {
 		let optionLines = _.filter(lines, function (line) {
 			return (
 				((line.pos.x1 === x && line.pos.y1 === y) || (line.pos.x2 === x && line.pos.y2 === y)) &&

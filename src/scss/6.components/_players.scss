@@ -1,0 +1,26 @@
+.players {
+	background: #49453d;
+}
+
+.player {
+	$s: &;
+
+	transform: translateY(50%);
+
+	&__circle {
+		fill: #35312a;
+		stroke-width: 5;
+		transition: 2s ease all;
+	}
+
+	&__score {
+		font-size: 64px;
+	}
+
+	&--current {
+		#{$s}__circle {
+			stroke-width: 15;
+			stroke-dashoffset: 50;
+		}
+	}
+}
