@@ -2,6 +2,17 @@ import _ from "lodash";
 
 export default class Utils {
 	/**
+	 * Calc tale number
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @returns {*}
+	 */
+	static calcTaleNumber = (x,y, width) =>{
+		return (width * y) + x;
+	};
+
+	/**
 	 * Get line position
 	 * @param x
 	 * @param y

@@ -50,7 +50,7 @@ class App extends React.Component {
 			// data to draw the game
 			// todo create a super function so we don't need to loop 3 times over the columns and rows
 			box: {
-				tales: this.generateTaleData(),
+				tiles: this.generateTileData(),
 				lines: this.generateLineData(),
 				dots: this.generateDotData(),
 			}
@@ -58,16 +58,16 @@ class App extends React.Component {
 	}
 
 	/**
-	 * Generate Tale Data
+	 * Generate Tile Data
 	 * @returns {Array}
 	 */
-	generateTaleData = () => {
-		let taleData = [];
+	generateTileData = () => {
+		let tileData = [];
 
 		for (let y = 0; y < config.height; y++) {
 			for (let x = 0; x < config.width; x++) {
-				const number = (config.width * y) + x;
-				taleData[number] = {
+				const number = utils.calcTileNumber(x,y, config.width);
+				tileData[number] = {
 					pos: {
 						x: x,
 						y: y
@@ -78,7 +78,7 @@ class App extends React.Component {
 			}
 		}
 
-		return taleData;
+		return tileData;
 	};
 
 	/**
@@ -92,14 +92,14 @@ class App extends React.Component {
 			for (let x = 0; x <= config.width; x++) {
 
 				const pos = utils.getLinePositions(x, y, config.size);
-				const numberCurrent = (config.width * y) + x;
+				const baseNumber = utils.calcTileNumber(x,y, config.width);
 
 				// Todo horizontal and vertical use exact same script, should be put into function to centralize functionality
 				// Horizontal line
 				if (x < config.width) {
 
-					const numberAbove = y > 0 ? numberCurrent - config.width : false; // if not most top line
-					const numberBelow = y < config.height ? numberCurrent : false; // if not most bottom line
+					const numberAbove = y > 0 ? baseNumber - config.width : false; // if not most top line
+					const numberBelow = y < config.height ? baseNumber : false; // if not most bottom line
 
 					lineData[id] = {
 						id: id,
@@ -117,8 +117,8 @@ class App extends React.Component {
 
 				// Vertical line
 				if (y < config.height) {
-					const numberLeft = x > 0 ? numberCurrent - 1 : false; // if not most left line
-					const numberRight = x < config.width ? numberCurrent : false; // if not most right line
+					const numberLeft = x > 0 ? baseNumber - 1 : false; // if not most left line
+					const numberRight = x < config.width ? baseNumber : false; // if not most right line
 
 					lineData[id] = {
 						id: id,
@@ -192,7 +192,7 @@ class App extends React.Component {
 		if (id !== game.mouseLine.id && game.mouseLine.id !== false) {
 
 			// Note: finding the line is a bit tricky, since we use coordinates to find them, should use ID's instead
-			// Check if a line matches the tale
+			// Check if a line matches the tile
 			match = _.filter(lines, function (line) {
 				return (
 					((line.pos.x1 === x && line.pos.y1 === y) || (line.pos.x2 === x && line.pos.y2 === y)) &&
@@ -249,12 +249,12 @@ class App extends React.Component {
 				return;
 			}
 
-			// Check if a line matches the tale
+			// Check if a line matches the tile
 			let match = _.filter(lines, function (line) {
 				return line.numbers.includes(number) && line.player !== false;
 			});
 
-			// When the tale has 4 lines set connect player to it
+			// When the tile has 4 lines set connect player to it
 			if (match.length === 4) {
 				this.setBox(number, game.currentPlayer);
 				success = true;
@@ -276,9 +276,9 @@ class App extends React.Component {
 	 * @param player
 	 */
 	setBox = (id, player) => {
-		let tales = {...this.state.box.tales};
-		tales[id].player = player;
-		this.setState(tales);
+		let tiles = {...this.state.box.tiles};
+		tiles[id].player = player;
+		this.setState(tiles);
 	};
 
 	/**
@@ -303,8 +303,8 @@ class App extends React.Component {
 	 * @returns {string|string}
 	 */
 	getBoxColor = (id) => {
-		const tales = {...this.state.box.tales};
-		const player = tales[id].player;
+		const tiles = {...this.state.box.tiles};
+		const player = tiles[id].player;
 		if (player === false) {
 			return 'white';
 		}
@@ -356,19 +356,19 @@ class App extends React.Component {
 	 */
 	render()
 	{
-		// Draw tales
-		let squares = this.state.box.tales.map((tale) => {
-			let x = tale.pos.x * config.size;
-			let y = tale.pos.y * config.size;
+		// Draw tiles
+		let squares = this.state.box.tiles.map((tile) => {
+			let x = tile.pos.x * config.size;
+			let y = tile.pos.y * config.size;
 
 			return (
-				<g key={tale.number}>
-					<rect className="box__tale" x={x}
+				<g key={tile.number}>
+					<rect className="box__tile" x={x}
 					      y={y} width={config.size} height={config.size}
-					      fill={this.getBoxColor(tale.number)} stroke={"#222"} strokeWidth={"12"}/>
+					      fill={this.getBoxColor(tile.number)} stroke={"#222"} strokeWidth={"12"}/>
 					<text className="box__number" x={x + config.size / 2}
 					      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
-					      fill="black">{tale.number + 1}</text>
+					      fill="black">{tile.number + 1}</text>
 				</g>
 			)
 		});
