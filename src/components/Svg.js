@@ -98,7 +98,7 @@ export const Tale = (props) =>{
 export const Player = (props) => {
 	return (
 		<g className={"players__player player " + (props.currentPlayer ? 'player--current' : '')}>
-			<circle className={"player__circle"} cx={props.cx} cy={-50} fill="#48443C" r={"50"} strokeDasharray={157/props.score} stroke={(props.currentPlayer ? props.fill : 'black')}/>
+			<circle className={"player__circle"} cx={props.cx} cy={-50} fill="#48443C" r={"50"} strokeDasharray={157/props.score} stroke={(props.currentPlayer ? '#FEDC7C' : props.fill  )}/>
 			<text className="player__score" x={props.cx}
 			      y={-45} dominantBaseline="middle" textAnchor="middle"
 			      fill={props.fill}>{props.score}</text>

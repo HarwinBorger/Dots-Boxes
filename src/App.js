@@ -15,13 +15,18 @@ import './App.css';
  */
 
 class App extends React.Component {
+
 	constructor()
 	{
 		super();
 
+		this.state = this.initialState;
+	}
+
+	get initialState() {
 		// Todo use Redux to store data on a more centralize location so we can split up all functions to improve readability of code
 		// Todo or use NodeJS to store data on a server to play the game over different clients
-		this.state = {
+		return  {
 			// game data
 			game: {
 				currentPlayer: 0,
@@ -56,6 +61,10 @@ class App extends React.Component {
 			}
 		};
 	}
+
+	restartGame = () =>{
+		this.setState(this.initialState);
+	};
 
 	/**
 	 * Generate Tile Data
@@ -458,6 +467,8 @@ class App extends React.Component {
 					        score={this.getPlayerScore(1)}
 					        name={this.state.players[1].name}
 					        currentPlayer={this.isCurrentPlayer(1)}/>
+
+			        <text onClick={this.restartGame} x={250} y={'90%'} dominantBaseline="middle" textAnchor="middle" fill="white">Restart</text>
 				</svg>
 			</div>
 		);
