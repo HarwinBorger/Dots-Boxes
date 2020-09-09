@@ -66,14 +66,14 @@ class App extends React.Component {
 
 		for (let y = 0; y < config.height; y++) {
 			for (let x = 0; x < config.width; x++) {
-				const number = utils.calcTileNumber(x,y, config.width);
-				tileData[number] = {
+				const tileNumber = utils.calcTileNumber(x,y, config.width);
+				tileData[tileNumber] = {
 					pos: {
 						x: x,
 						y: y
 					},
 					player: false,
-					number: number,
+					number: tileNumber,
 				};
 			}
 		}
@@ -98,8 +98,8 @@ class App extends React.Component {
 				// Horizontal line
 				if (x < config.width) {
 
-					const numberAbove = y > 0 ? baseNumber - config.width : false; // if not most top line
-					const numberBelow = y < config.height ? baseNumber : false; // if not most bottom line
+					const tileAbove = y > 0 ? baseNumber - config.width : false; // if not most top line
+					const tileBelow = y < config.height ? baseNumber : false; // if not most bottom line
 
 					lineData[id] = {
 						id: id,
@@ -109,7 +109,7 @@ class App extends React.Component {
 							x2: pos.tr.x,
 							y2: pos.tr.y
 						},
-						numbers: [numberAbove, numberBelow],
+						tiles: [tileAbove, tileBelow],
 						player: false
 					};
 					id++;
@@ -117,8 +117,8 @@ class App extends React.Component {
 
 				// Vertical line
 				if (y < config.height) {
-					const numberLeft = x > 0 ? baseNumber - 1 : false; // if not most left line
-					const numberRight = x < config.width ? baseNumber : false; // if not most right line
+					const tileLeft = x > 0 ? baseNumber - 1 : false; // if not most left line
+					const tileRight = x < config.width ? baseNumber : false; // if not most right line
 
 					lineData[id] = {
 						id: id,
@@ -128,7 +128,7 @@ class App extends React.Component {
 							x2: pos.bl.x,
 							y2: pos.bl.y
 						},
-						numbers: [numberLeft, numberRight],
+						tiles: [tileLeft, tileRight],
 						player: false
 					};
 					id++;
@@ -241,9 +241,9 @@ class App extends React.Component {
 		lines[id].player = game.currentPlayer;
 		this.setState({lines});
 
-		// Check if any of the numbers from line has 4 lines connected
+		// Check if any of the tiles from line has 4 lines connected
 		let success = false; // flag set on true when 1 or more boxes are filled
-		lines[id].numbers.map((number) => {
+		lines[id].tiles.map((number) => {
 			// When number is not a number, we are on the edge, we skip this number
 			if (number === false) {
 				return;
@@ -251,10 +251,10 @@ class App extends React.Component {
 
 			// Check if a line matches the tile
 			let match = _.filter(lines, function (line) {
-				return line.numbers.includes(number) && line.player !== false;
+				return line.tiles.includes(number) && line.player !== false;
 			});
 
-			// When the tile has 4 lines set connect player to it
+			// When the tile has 4 lines set player to it, it could be 2 tiles
 			if (match.length === 4) {
 				this.setBox(number, game.currentPlayer);
 				success = true;
