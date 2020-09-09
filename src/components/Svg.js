@@ -43,6 +43,9 @@ export const LineGroup = (props) => {
 	);
 };
 
+/**
+ * Mouse line
+ */
 export class MouseLine extends React.Component {
 	constructor(props)
 	{
@@ -67,6 +70,31 @@ export class MouseLine extends React.Component {
 	}
 }
 
+/**
+ *
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
+export const Tale = (props) =>{
+	return (
+		<g>
+			<rect className="box__tile" x={props.x}
+			      y={props.y} width={props.size} height={props.size}
+			      fill={props.fill} stroke={"#222"} strokeWidth={"12"}/>
+			<text className="box__number" x={props.x + props.size / 2}
+			      y={props.y + props.size / 2} dominantBaseline="middle" textAnchor="middle"
+			      fill="black">{props.number + 1}</text>
+		</g>
+	)
+};
+
+/**
+ * Player stats
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 export const Player = (props) => {
 	return (
 		<g className={"players__player player " + (props.currentPlayer ? 'player--current' : '')}>

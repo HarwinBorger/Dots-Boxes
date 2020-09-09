@@ -4,7 +4,7 @@ import _ from 'lodash';
 // Configs
 import config from './config/config';
 // Components
-import {LineGroup, Dot, MouseLine, Player} from './components/Svg';
+import {LineGroup, Dot, MouseLine, Player, Tale} from './components/Svg';
 //  Utilities
 import utils from './utils/utils';
 
@@ -396,14 +396,8 @@ class App extends React.Component {
 			let y = tile.pos.y * config.size;
 
 			return (
-				<g key={tile.number}>
-					<rect className="box__tile" x={x}
-					      y={y} width={config.size} height={config.size}
-					      fill={this.getBoxColor(tile.number)} stroke={"#222"} strokeWidth={"12"}/>
-					<text className="box__number" x={x + config.size / 2}
-					      y={y + config.size / 2} dominantBaseline="middle" textAnchor="middle"
-					      fill="black">{tile.number + 1}</text>
-				</g>
+				<Tale key={tile.number} fill={this.getBoxColor(tile.number)} x={x} y={y} size={config.size}
+				      number={tile.number}/>
 			)
 		});
 
@@ -411,7 +405,6 @@ class App extends React.Component {
 		let lines = this.state.box.lines.map((line) => {
 			return (
 				<LineGroup
-					//onClick={() => this.setLine(line.id)} // This functionality is replace by line drag
 					key={line.id}
 					x1={line.pos.x1}
 					y1={line.pos.y1}
