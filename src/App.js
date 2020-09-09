@@ -64,6 +64,9 @@ class App extends React.Component {
 		};
 	}
 
+	/**
+	 * Restart Game
+	 */
 	restartGame = () =>{
 		this.setState(this.initialState);
 	};
