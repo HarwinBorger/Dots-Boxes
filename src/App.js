@@ -2,17 +2,16 @@ import React from 'react';
 import _ from 'lodash';
 
 // Configs
-import config from './Config/Config';
+import config from './config/config';
 // Components
-import {LineGroup, Dot, MouseLine} from './Components/Svg';
+import {LineGroup, Dot, MouseLine} from './components/Svg';
 //  Utilities
-import Utils from './Utils/Utils';
+import utils from './utils/utils';
 
 import './App.css';
 
 /**
  * Box game
- * // Todo something causes to load game twice, shouldn't be happening
  */
 
 class App extends React.Component {
@@ -89,16 +88,17 @@ class App extends React.Component {
 		let lineData = [];
 		let id = 0;
 
-		for (let x = 0; x <= config.width; x++) {
-			for (let y = 0; y <= config.height; y++) {
+		for (let y = 0; y <= config.height; y++) {
+			for (let x = 0; x <= config.width; x++) {
 
-				const pos = Utils.getLinePositions(x, y, config.size);
+				const pos = utils.getLinePositions(x, y, config.size);
 				const numberCurrent = (config.width * y) + x;
 
 				// Todo horizontal and vertical use exact same script, should be put into function to centralize functionality
 				// Horizontal line
 				if (x < config.width) {
-					const numberAbove = y > 0 ? numberCurrent - config.height : false; // if not most top line
+
+					const numberAbove = y > 0 ? numberCurrent - config.width : false; // if not most top line
 					const numberBelow = y < config.height ? numberCurrent : false; // if not most bottom line
 
 					lineData[id] = {
@@ -149,15 +149,15 @@ class App extends React.Component {
 		 */
 		const dots = [];
 		let id = 0;
-		// Loop through columns
-		for (let column = 0; column <= config.width; column++) {
-			// Loop through rows
-			for (let row = 0; row <= config.height; row++) {
+		// Loop through rows
+		for (let y  = 0; y  <= config.height; y ++) {
+			// Loop through column
+			for (let x = 0; x <= config.width; x++) {
 				dots[id] = {
 					id: id,
 					pos: {
-						x: row * config.size,
-						y: column * config.size,
+						x: x * config.size,
+						y: y * config.size,
 					}
 				};
 
@@ -185,7 +185,7 @@ class App extends React.Component {
 		let my = game.mouseLine.y;
 
 		// Show possible options in yellow dots
-		let options = Utils.getOptions(lines, dots, x, y);
+		let options = utils.getOptions(lines, dots, x, y);
 
 		// WHEN the 1th DOT and 2nd DOT are not identical try to find connected LINE
 		let match = false;
@@ -232,7 +232,6 @@ class App extends React.Component {
 		// Retrieve several states
 		const game = {...this.state.game};
 		const lines = {...this.state.box.lines};
-
 		// Check if player is allowed to set this line
 		if (lines[id].player !== false) {
 			return
@@ -306,7 +305,6 @@ class App extends React.Component {
 	getBoxColor = (id) => {
 		const tales = {...this.state.box.tales};
 		const player = tales[id].player;
-
 		if (player === false) {
 			return 'white';
 		}
@@ -338,6 +336,12 @@ class App extends React.Component {
 		this.setState({game});
 	};
 
+	/**
+	 * Get Dot option class
+	 * @description check if the current dot (id) is in the list with possible options
+	 * @param id
+	 * @returns {string}
+	 */
 	getDotOptionClass = (id) => {
 		if (this.state.game.mouseLine.options && this.state.game.mouseLine.options.includes(id)) {
 			return 'active'
@@ -393,9 +397,10 @@ class App extends React.Component {
 			);
 		});
 
-		let viewportOffset = config.offset;
-		let viewportWidth = config.width * config.size + config.offset * -2;
-		let viewportHeight = config.height * config.size + config.offset * -2;
+		let viewportOffsetX = config.offsetX;
+		let viewportOffsetY = config.offsetY;
+		let viewportWidth = config.width * config.size + config.offsetX * -2;
+		let viewportHeight = config.height * config.size + config.offsetY * -2;
 
 		return (
 			<div className="App">
@@ -403,7 +408,7 @@ class App extends React.Component {
 				{this.state.players[this.state.game.currentPlayer].name} ({this.state.players[this.state.game.currentPlayer].color})
 
 				<svg className={"box"} width="100%" height="1000"
-				     viewBox={`${viewportOffset},${viewportOffset} ${viewportWidth} ${viewportHeight}`}
+				     viewBox={`${viewportOffsetX},${viewportOffsetY} ${viewportWidth} ${viewportHeight}`}
 				     onMouseMove={(e) => this.handleMouseMove(e)}
 				     ref={(svg) => this.svg = svg}>
 					{squares}
