@@ -1,5 +1,4 @@
 import React from "react";
-import config from "../config/config";
 
 /**
  * Dot class
@@ -46,29 +45,22 @@ export const LineGroup = (props) => {
 /**
  * Mouse line
  */
-export class MouseLine extends React.Component {
-	constructor(props)
-	{
-		super(props);
+export const MouseLine = (props) => {
+
+	if (props.id === false) {
+		return (null);
 	}
 
-	render()
-	{
-		if (this.props.id === false) {
-			return (null);
-		}
-
-		return (
-			<line className="box__mouseline"
-			      x1={this.props.x1}
-			      y1={this.props.y1}
-			      x2={this.props.x2}
-			      y2={this.props.y2}
-			      stroke={this.props.currentColor}
-			      strokeWidth="8" strokeLinecap={"round"}/>
-		)
-	}
-}
+	return (
+		<line className="box__mouseline"
+		      x1={props.x1}
+		      y1={props.y1}
+		      x2={props.x2}
+		      y2={props.y2}
+		      stroke={props.currentColor}
+		      strokeWidth="8" strokeLinecap={"round"}/>
+	)
+};
 
 /**
  *
@@ -116,11 +108,11 @@ export const Winner = (props) => {
 	}
 
 	return (
-			<g className={"winner"} transform={`translate(${props.offset},0)`} onClick={props.onClick}>
-				<rect className="winner__rect" x="-400" width="400" height="100"
-				      fill={"black"}/>
-				<text className={"winner__text"} x={`-${props.offset/2}`} y ="50" dominantBaseline="middle"
-				      textAnchor="middle">{props.player}</text>
-			</g>
+		<g className={"winner"} transform={`translate(${props.offset},0)`} onClick={props.onClick}>
+			<rect className="winner__rect" x="-400" width="400" height="100"
+			      fill={"black"}/>
+			<text className={"winner__text"} x={`-${props.offset / 2}`} y="50" dominantBaseline="middle"
+			      textAnchor="middle">{props.player}</text>
+		</g>
 	)
 };

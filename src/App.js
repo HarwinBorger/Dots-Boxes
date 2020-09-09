@@ -254,7 +254,7 @@ class App extends React.Component {
 
 		// Check if any of the tiles from line has 4 lines connected
 		let success = false; // flag set on true when 1 or more boxes are filled
-		lines[id].tiles.map((number) => {
+		lines[id].tiles.forEach((number) => {
 			// When number is not a number, we are on the edge, we skip this number
 			if (number === false) {
 				return;
