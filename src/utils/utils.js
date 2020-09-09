@@ -2,13 +2,13 @@ import _ from "lodash";
 
 export default class Utils {
 	/**
-	 * Calc tale number
+	 * Calc tile number
 	 * @param x
 	 * @param y
 	 * @param width
 	 * @returns {*}
 	 */
-	static calcTaleNumber = (x,y, width) =>{
+	static calcTileNumber = (x,y, width) =>{
 		return (width * y) + x;
 	};
 
