@@ -1,4 +1,4 @@
-# Dots & Boxes
+# Dots & Boxes by Harwin
 Hello, this is my version of the Dots & Boxes game intended to learn React :-)
 If you like to try out the game locally run:
 
