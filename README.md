@@ -14,4 +14,4 @@ npm start
 
 Enjoy playing the game! 
 
-# :cherries: 
+# :cherries: :birthday:
