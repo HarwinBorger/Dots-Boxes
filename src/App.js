@@ -5,16 +5,14 @@ import _ from 'lodash';
 import config from './config/config';
 // Components
 import {LineGroup, Dot, MouseLine, Player, Tale, Winner} from './components/Svg';
-//  Utilities
+// Utilities
 import utils from './utils/utils';
+// Enums
 import enums from './enums/enums';
-
-import './App.css';
 
 /**
  * Box game
  */
-
 class App extends React.Component {
 
 	constructor()

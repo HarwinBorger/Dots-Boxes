@@ -11,7 +11,7 @@
 
 		&:hover {
 			fill: $color-yellow;
-			filter: drop-shadow(0 0 4px rgba($color-black, .5)); // works only in Firefox :(
+			//filter: drop-shadow(0 0 4px rgba($color-black, .5)); // works only in Firefox :(
 		}
 
 		&--active{
@@ -24,7 +24,7 @@
 
 		transition: all linear .5s;
 		border-radius: 100%;
-		filter: drop-shadow(0 0 20px rgba($color-black, .5)); // works only in Firefox :(
+		//filter: drop-shadow(0 0 20px rgba($color-black, .5)); // works only in Firefox :(
 	}
 
 	&__tale {
@@ -38,7 +38,7 @@
 
 	&__mouseline {
 		pointer-events: none;
-		filter: drop-shadow(0 0 5px rgba($color-black, .8)); // works only in Firefox :(
+		//filter: drop-shadow(0 0 5px rgba($color-black, .8)); // works only in Firefox :(
 	}
 }
 
