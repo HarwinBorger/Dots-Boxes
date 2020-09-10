@@ -14,7 +14,7 @@ then
 npm start
 ``` 
 
-##Demo
+## Demo
 http://dotsandboxes.harwin.nl  
 
 Enjoy playing the game! 
